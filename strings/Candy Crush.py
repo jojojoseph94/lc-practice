@@ -23,4 +23,68 @@ Output:
 
 class Solution:
     def candyCrush(self, board: List[List[int]]) -> List[List[int]]:
+        def candy_crush():
+            change = False
+            #horizontal
+            for i in range(0,len(board)):
+                fl = 0
+                for j in range(1,len(board[0])):
+                    if board[i][j] == board[i][j-1]:
+                        fl +=1
+                    else:
+                        if fl >= 2:
+                            for k in range(j-fl-1,j):
+                                if board[i][k] > 0:
+                                    board[i][k] *=-1
+                                    change = True
+                        fl = 0
+                if fl >=2:
+                    for k in range(len(board[0])-1-fl,len(board[0])):
+                        if board[i][k] > 0:
+                            board[i][k] *=-1
+                            change = True
+            #vertical
+            for i in range(0,len(board[0])):
+                fl = 0
+                for j in range(1,len(board)):
+                    if abs(board[j][i]) == abs(board[j-1][i]):
+                        fl +=1
+                    else:
+                        if fl >= 2:
+                            for k in range(j-fl-1,j):
+                                if board[k][i] > 0:
+                                    board[k][i] *=-1
+                                    change = True
+                        fl = 0
+                if fl >= 2:
+                    for k in range(len(board)-fl-1,len(board)):
+                        if board[k][i] > 0:
+                            board[k][i] *=-1
+                            change = True
+            #clear
+            for i in range(0,len(board)):
+                for j in range(0,len(board[0])):
+                    if board[i][j] < 0:
+                        board[i][j] = 0
+            return change
         
+        def drop():
+            #vertical drop
+            #2pointer read head write head
+            for i in range(0,len(board[0])):
+                wh = len(board)-1
+                for j in range(len(board)-1, -1, -1):
+                    if board[j][i]:
+                        board[wh][i]=board[j][i]
+                        wh-=1
+                for k in range(wh+1):
+                    board[k][i] = 0
+                
+        cnt = 0
+        while 1:
+            if candy_crush():
+                drop()
+                #break
+            else:
+                break
+        return board
