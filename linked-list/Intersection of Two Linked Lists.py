@@ -8,6 +8,8 @@ Solution : 1. Hashmap -> Navigate over first linked list keeping elements in hm
             Space complexity : O(N)
            2. 2 pointers for 2 linked lists. Iterate one node at a time till 2 pointers are not same
               If you reach end of one linked list, start from the beginning of other node
+              Why does this work??
+              
               Time complexity : O(N)
               Space complexity : O(1)
 """

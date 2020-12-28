@@ -28,8 +28,26 @@ Explanation:
 The substring with start index = 0 is "ab", which is an anagram of "ab".
 The substring with start index = 1 is "ba", which is an anagram of "ab".
 The substring with start index = 2 is "ab", which is an anagram of "ab".
+
+Solution : Keep 2 counters; use sliding window of size len(p) on s to maintina the s_counter. At each point, check if the counters are equal. If yes, add index to ans.
+Time complexity : O(N)
+space complexity : O(1) - 26 characters
+
 """
 
 class Solution:
     def findAnagrams(self, s: str, p: str) -> List[int]:
-        
+        p_counter = Counter(p)
+        s_counter = Counter()
+        ans = []
+        for i in range(len(s)):
+            #print(s_counter, p_counter)
+            s_counter[s[i]]+=1
+            if i >= len(p):
+                #remove a char from left
+                s_counter[s[i-len(p)]]-=1
+                if s_counter[s[i-len(p)]] == 0:
+                    del s_counter[s[i-len(p)]]
+            if s_counter == p_counter:
+                ans.append(i-len(p)+1)
+        return ans

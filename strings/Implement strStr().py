@@ -35,9 +35,9 @@ Solution 1 : 2 pointers - one for haystack and one for needle.
             reset the needle to 0 and haystack to haystack - needle +1
            Time complexity : O(N*L)
            Space complexity : O(1)
-Solution 2 : KMP algorithm - TODO
+Solution 2 : KMP algorithm - check below
             Time complexity : O(N)
-            Space complexity : O(1ß)
+            Space complexity : O(1)
 """
 
 class Solution:
@@ -58,3 +58,47 @@ class Solution:
             return h_ptr - n_ptr
         else:
             return -1
+
+    def strStr_KMP(self, haystack: str, needle: str) -> int:
+        """
+        KMP explanation : for needle create a lsp/lps array. lps[i] is the length of the longest prefix which is also a suffix from 0,1,..i (This does not include the whole string till then needle[0:i+1]).
+                          after creation of lps array, we use that to check characters. If there is match, keep incrementing. If there is a mismatch, check the char that mismatched at haystack with the previous lps.
+                          Keep doing that till you reach 0.
+        """
+        if not haystack and not needle:
+            return 0
+        if not haystack:
+            return -1
+        if not needle:
+            return 0
+        def get_lsp():
+            lsp = [0]*len(needle)
+            len_lsp = 0
+            i = 1
+            while i < len(needle):
+                if needle[len_lsp] == needle[i]:
+                    len_lsp+=1
+                    lsp[i] = len_lsp
+                    i+=1
+                else:
+                    if len_lsp != 0:
+                        len_lsp = lsp[len_lsp-1]
+                    else:
+                        lsp[i] = len_lsp
+                        i+=1
+            return lsp
+        lsp = get_lsp()
+        i = 0
+        j = 0
+        while i < len(haystack):
+            if haystack[i] == needle[j]:
+                j+=1
+                i+=1
+            else:
+                if j != 0:
+                    j = lsp[j-1]
+                else:
+                    i+=1
+            if j == len(needle):
+                return (i - j)    
+        return -1
