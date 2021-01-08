@@ -42,7 +42,20 @@ Solution : Straight fwd -> Merge the two arrays. Return the median of the merged
            Time complexity : O(N) (To merge the two sorted arrays)
            Space complexity : O(N) for new array
 
-Solution 2 : 
+Solution 2 : For binary search approach, we are trying to find the mid element of the combined array.
+             For this we first find the smaller length array.
+             Then for the combined arrays, we need to find the mid point so that we have
+             l1, l2, r1, r2
+             elements where l1 and r1 belong to the first array and l2 and r2 belong to the second array.
+             If we have partx elements from the first array, then the second array will have (N+M+1)//2 - partx
+             elements. (Why - cause partx + party will give you the mid point of the combined arrays).
+             Now our objective is to move the partx to the right or paty to the left.
+             You can do that by checking if l1 > r2 or l2 > r1.
+             You can 1. move partx to the right if l2 > r1
+                     2. move party to the left if l1 > r2
+
+            Time complexity : O(log(min(M, N)))
+            Space complexity : O(1)
 
 """
 class Solution:
@@ -69,6 +82,28 @@ class Solution:
         else:
             return (nums3[len(nums3)//2] + nums3[len(nums3)//2 - 1]) /2.0
 
-    def findMedianSortedArraysBinarySearch(self, nums1: List[int], nums2: List[int]) -> float:
-        #O(log(min(m,n)))
-        #TODO
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        n = len(nums1)
+        m = len(nums2)
+        low = 0
+        high = n
+        while low <= high:
+            partx = (low + high)//2
+            party = (n+m+1)//2 - partx
+            l1 = float('-inf') if partx-1 < 0 else nums1[partx-1]
+            l2 = float('-inf') if party-1 < 0 else nums2[party-1]
+            r1 = float('inf') if partx >= n else nums1[partx]
+            r2 = float('inf') if party >=m else nums2[party]
+            #print(partx, l1, r1, party, l2, r2)
+            if l1 > r2:
+                high = partx-1
+            elif l2 > r1:
+                low = partx+1
+            else:
+                if (m+n)%2 == 0:
+                    return (max(l1, l2) + min(r1, r2))/2.0
+                else:
+                    return max(l1,l2)
+        return -1

@@ -41,3 +41,18 @@ class Solution:
                 if n_zero == n_one:
                     ans=max(ans, j-i+1)
         return ans
+
+    def findMaxLengthHashMap(self, nums: List[int]) -> int:
+        hm = {0:-1}
+        count = 0
+        ans = 0
+        for i in range(0,len(nums)):
+            if nums[i]:
+                count+=1
+            else:
+                count-=1
+            if count in hm:
+                ans = max(ans, i-hm[count])
+            else:
+                hm[count] = i
+        return ans
